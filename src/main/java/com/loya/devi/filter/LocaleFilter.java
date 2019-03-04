@@ -54,6 +54,7 @@ public class LocaleFilter extends GenericFilterBean {
 
     private List<String> langList;
 
+
     @Override
     public void initFilterBean() {
         langList = loadLanguageList();
