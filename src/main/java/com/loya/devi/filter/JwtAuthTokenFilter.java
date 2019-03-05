@@ -1,30 +1,31 @@
 package com.loya.devi.filter;
 
 import com.loya.devi.security.JwtProvider;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
-import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * Validate jwt token and set context
  */
-@Component
-public class JwtAuthTokenFilter extends GenericFilterBean {
+public class JwtAuthTokenFilter extends OncePerRequestFilter {
     private static final String CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE = "Can NOT set user authentication -> Message: {}";
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER_ = "Bearer ";
+
+    private static Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
 
     private JwtProvider tokenProvider;
     private UserDetailsService userDetailsService;
@@ -34,23 +35,11 @@ public class JwtAuthTokenFilter extends GenericFilterBean {
         this.userDetailsService = userDetailsService;
     }
 
-    /**
-     * method make token from request and check it
-     * if token is not valid throw exception
-     * if token is not exist just make doFilter()
-     *
-     * @param request  of user
-     * @param response of app
-     * @param chain    is filters chain
-     * @throws IOException      if will exception
-     * @throws ServletException if will exception
-     */
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpServletResponse, FilterChain chain) throws ServletException, IOException {
+        String jwt = getJwt(httpRequest);
+//        logger.info(httpRequest.getRequestURL().toString());
         try {
-            HttpServletRequest httpRequest = (HttpServletRequest) request;
-            String jwt = getJwt(httpRequest);
-            logger.info(httpRequest.getRequestURL().toString());
             if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
                 String username = tokenProvider.getUserNameFromJwtToken(jwt);
                 UserDetails userDetails = userDetailsService.loadUserByUsername(username);
@@ -60,10 +49,9 @@ public class JwtAuthTokenFilter extends GenericFilterBean {
             }
         } catch (Exception e) {
             logger.error(CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE, e);
-            throw e;
         }
 
-        chain.doFilter(request, response);
+        chain.doFilter(httpRequest, httpServletResponse);
     }
 
     private String getJwt(HttpServletRequest request) {

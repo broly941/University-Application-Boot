@@ -40,6 +40,8 @@ import static org.springframework.http.HttpHeaders.ACCEPT_LANGUAGE;
 @Component
 public class LocaleFilter extends GenericFilterBean {
 
+    private static Logger logger = LoggerFactory.getLogger(JwtAuthTokenFilter.class);
+
     private final Predicate<Integer> indexValidPredicate = index -> index != -1;
 
     private static final String LANGUAGE_NOT_SUPPORTED = "Language not supported: ";
@@ -64,7 +66,7 @@ public class LocaleFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        logger.info(httpRequest.getRequestURL().toString());
+//        logger.info(httpRequest.getRequestURL().toString());
         String acceptLanguage = httpRequest.getHeader(ACCEPT_LANGUAGE);
         if (acceptLanguage == null) {
             setLocale(httpRequest, httpServletResponse, chain, LOCALE_EN);
@@ -96,7 +98,8 @@ public class LocaleFilter extends GenericFilterBean {
             setLocale(request, response, filterChain, acceptLanguage);
         } else if (!getLocaleByLanguage(request, response, filterChain, acceptLanguage)) {
             logger.error(HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED + acceptLanguage);
-            response.sendError(400, LANGUAGE_NOT_SUPPORTED + acceptLanguage);
+//            response.sendError(400, LANGUAGE_NOT_SUPPORTED + acceptLanguage);
+            setLocale(request, response, filterChain, LOCALE_EN);
         }
     }
 

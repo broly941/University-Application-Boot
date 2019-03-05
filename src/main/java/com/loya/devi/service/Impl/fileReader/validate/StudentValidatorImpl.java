@@ -83,7 +83,7 @@ public class StudentValidatorImpl implements StudentValidator {
 
     private void getRuntimeStatistic(long startTime) {
         long time = System.currentTimeMillis() - startTime;
-        LOGGER.debug(Thread.currentThread().getName() + ": " + time + " millis");
+        LOGGER.info(Thread.currentThread().getName() + ": " + time + " millis");
     }
 
     private void validateDuplicate(Locale locale, CopyOnWriteArraySet<String> duplicateSet, String firstName, String lastName, List<String> rowErrors) {

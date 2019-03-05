@@ -31,13 +31,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Autowired
     private JwtProvider jwtProvider;
 
-    @Autowired
-    private LocaleFilter localeFilter;
-
     @Qualifier("userDetailsCustom")
     @Autowired
     private UserDetailsService userDetailsService;
 
+    @Autowired
+    private LocaleFilter localeFilter;
     /**
      * Bean for authenticate
      *
@@ -72,6 +71,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .and()
                 .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         http.addFilterBefore(new JwtAuthTokenFilter(jwtProvider, userDetailsService), UsernamePasswordAuthenticationFilter.class);
         http.addFilterBefore(localeFilter, UsernamePasswordAuthenticationFilter.class);
     }

@@ -8,6 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.orm.jpa.JpaSystemException;
@@ -53,7 +54,8 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     @Override
     public List<T> getAll(Supplier<List<T>> function, Locale locale, String message, String par1) {
         LOGGER.info(messageSource.getMessage(message, new Object[]{par1}, locale));
-        return function.get();
+        List<T> ts = function.get();
+        return ts;
     }
 
     /**
@@ -118,7 +120,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
         T returnEntity = null;
         try {
             returnEntity = function.apply(entity);
-        } catch (JpaSystemException ex) {
+        } catch (DataIntegrityViolationException ex) {
             throw new ViolationException(messageSource.getMessage(VIOLATION_EXCEPTION, new Object[]{}, locale));
         }
         LOGGER.info(messageSource.getMessage(message, new Object[]{par1}, locale));

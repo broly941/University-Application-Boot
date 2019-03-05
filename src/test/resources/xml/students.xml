@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <Student StudentId="1" FirstName= "Lee" LastName="Walker" GroupId="1"/>
+    <Student StudentId="2" FirstName= "Thomas" LastName="Moore" GroupId="2"/>
+    <Student StudentId="3" FirstName= "Lewis" LastName="Lopez" GroupId="3"/>
+</dataset>

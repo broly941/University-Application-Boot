@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<dataset>
+    <GroupOfUniversity GroupId="1" Number="POIT-161" TeacherId="1"/>
+    <GroupOfUniversity GroupId="2" Number="POIT-162" TeacherId="2"/>
+    <GroupOfUniversity GroupId="3" Number="POIT-21" TeacherId="3"/>
+</dataset>
