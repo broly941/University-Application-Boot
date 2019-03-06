@@ -2,16 +2,17 @@ CREATE TABLE Teacher
 (
   TeacherId BIGINT PRIMARY KEY AUTO_INCREMENT,
   FirstName VARCHAR(20) NOT NULL,
-  LastName VARCHAR(20) NOT NULL
+  LastName VARCHAR(20) NOT NULL,
+  UNIQUE (FirstName, LastName)
 );
 
 CREATE TABLE GroupOfUniversity
 (
   GroupId BIGINT PRIMARY KEY AUTO_INCREMENT,
-  Number VARCHAR(8) NOT NULL,
+  NumberGroup VARCHAR(8) NOT NULL,
   TeacherId BIGINT,
   FOREIGN KEY(TeacherId) REFERENCES Teacher(TeacherId) ON DELETE CASCADE,
-  UNIQUE (TeacherId)
+  UNIQUE (NumberGroup)
 );
 
 CREATE TABLE Student
@@ -20,7 +21,8 @@ CREATE TABLE Student
 	FirstName VARCHAR(20) NOT NULL,
 	LastName VARCHAR(20) NOT NULL,
 	GroupId BIGINT,
-  FOREIGN KEY (GroupId) REFERENCES GroupOfUniversity (GroupId) ON DELETE CASCADE
+  FOREIGN KEY (GroupId) REFERENCES GroupOfUniversity (GroupId) ON DELETE CASCADE,
+  UNIQUE (FirstName, LastName)
 );
 
 CREATE TABLE GroupTeacher (

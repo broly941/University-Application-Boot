@@ -1,5 +1,6 @@
 package com.loya.devi.filter;
 
+import org.hibernate.annotations.Filter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.i18n.LocaleContextHolder;
@@ -9,6 +10,7 @@ import org.springframework.web.filter.GenericFilterBean;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.util.WebUtils;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -66,7 +68,7 @@ public class LocaleFilter extends GenericFilterBean {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         HttpServletRequest httpRequest = (HttpServletRequest) request;
         HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-//        logger.info(httpRequest.getRequestURL().toString());
+        logger.info(httpRequest.getRequestURL().toString());
         String acceptLanguage = httpRequest.getHeader(ACCEPT_LANGUAGE);
         if (acceptLanguage == null) {
             setLocale(httpRequest, httpServletResponse, chain, LOCALE_EN);
@@ -97,9 +99,10 @@ public class LocaleFilter extends GenericFilterBean {
         if (langList.contains(acceptLanguage.replace(MINUS, UNDERSCORE))) {
             setLocale(request, response, filterChain, acceptLanguage);
         } else if (!getLocaleByLanguage(request, response, filterChain, acceptLanguage)) {
-            logger.error(HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED + acceptLanguage);
+//            logger.error(HTTP_STATUS_400_LANGUAGE_NOT_SUPPORTED + acceptLanguage);
 //            response.sendError(400, LANGUAGE_NOT_SUPPORTED + acceptLanguage);
-            setLocale(request, response, filterChain, LOCALE_EN);
+            throw new EntityNotFoundException(LANGUAGE_NOT_SUPPORTED + acceptLanguage);
+//            setLocale(request, response, filterChain, LOCALE_EN);
         }
     }
 

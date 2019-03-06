@@ -54,8 +54,7 @@ public class BaseServiceImpl<T> implements BaseService<T> {
     @Override
     public List<T> getAll(Supplier<List<T>> function, Locale locale, String message, String par1) {
         LOGGER.info(messageSource.getMessage(message, new Object[]{par1}, locale));
-        List<T> ts = function.get();
-        return ts;
+        return function.get();
     }
 
     /**

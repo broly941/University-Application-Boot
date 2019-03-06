@@ -37,10 +37,9 @@ public class DataConfigTest {
     @Bean
     javax.sql.DataSource dataSource() {
         EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-        DataSource dataSource = builder.setType(EmbeddedDatabaseType.H2)
+        return builder.setType(EmbeddedDatabaseType.H2)
                 .addScript("sql/start.sql")
                 .build();
-        return dataSource;
     }
 
     /**

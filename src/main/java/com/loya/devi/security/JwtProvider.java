@@ -95,15 +95,19 @@ public class JwtProvider {
             return true;
         } catch (SignatureException e) {
             LOGGER.error(INVALID_JWT_SIGNATURE_MESSAGE, e);
+            throw e;
         } catch (MalformedJwtException e) {
             LOGGER.error(INVALID_JWT_TOKEN_MESSAGE, e);
+            throw e;
         } catch (ExpiredJwtException e) {
             LOGGER.error(EXPIRED_JWT_TOKEN_MESSAGE, e);
+            throw e;
         } catch (UnsupportedJwtException e) {
             LOGGER.error(UNSUPPORTED_JWT_TOKEN_MESSAGE, e);
+            throw e;
         } catch (IllegalArgumentException e) {
             LOGGER.error(JWT_CLAIMS_STRING_IS_EMPTY_MESSAGE, e);
+            throw e;
         }
-        return false;
     }
 }

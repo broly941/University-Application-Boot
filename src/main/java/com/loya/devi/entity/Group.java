@@ -17,7 +17,7 @@ public class Group implements Serializable {
     @Column(name = "GroupId")
     private Long id;
 
-    @Column(name = "Number")
+    @Column(name = "NumberGroup")
     private String number;
 
     @OneToOne

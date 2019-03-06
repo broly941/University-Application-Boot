@@ -35,9 +35,10 @@ public class GroupController {
     @GetMapping
 //    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
     public List<GroupDTO> getAll(Locale locale) {
-        return groupService.getAll(locale).stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+        throw new RuntimeException("123");
+//        return groupService.getAll(locale).stream()
+//                .map(this::convertToDto)
+//                .collect(Collectors.toList());
     }
 
     /**

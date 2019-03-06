@@ -11,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
+import javax.persistence.EntityNotFoundException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +22,7 @@ import java.io.IOException;
  * Validate jwt token and set context
  */
 public class JwtAuthTokenFilter extends OncePerRequestFilter {
-    private static final String CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE = "Can NOT set user authentication -> Message: {}";
+    private static final String CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE = "Can not set user authentication -> Message: {}";
     private static final String AUTHORIZATION = "Authorization";
     private static final String BEARER_ = "Bearer ";
 
@@ -38,7 +39,7 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpRequest, HttpServletResponse httpServletResponse, FilterChain chain) throws ServletException, IOException {
         String jwt = getJwt(httpRequest);
-//        logger.info(httpRequest.getRequestURL().toString());
+        logger.info(httpRequest.getRequestURL().toString());
         try {
             if (jwt != null && tokenProvider.validateJwtToken(jwt)) {
                 String username = tokenProvider.getUserNameFromJwtToken(jwt);
@@ -48,7 +49,8 @@ public class JwtAuthTokenFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
         } catch (Exception e) {
-            logger.error(CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE, e);
+//            logger.error(CAN_NOT_SET_USER_AUTHENTICATION_MESSAGE, e);
+            throw e;
         }
 
         chain.doFilter(httpRequest, httpServletResponse);
